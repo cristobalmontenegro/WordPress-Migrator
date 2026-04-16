@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Migration Tool
+migration_config.json
+migration_temp/
+debug_key.py
+test_migrate.py
+wp-config.php
+*.sql
+*.zip
+*.tar.gz
+
+# Editor
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,27 @@
+{
+    "source": {
+        "host": "oldsite.com",
+        "user": "oldsite",
+        "pass": null,
+        "key_file": "/home/myuser/oldsite.pem",
+        "key_pass": "PASSWORD",
+        "wp_path": "/home/oldsite/public_html",
+        "db_name": null
+    },
+    "target": {
+        "host": "newsite.com",
+        "user": "newsite",
+        "pass": null,
+        "key_file": "/home/myuser/newsite.pem",
+        "key_pass": "PASSWORD",
+        "wp_path": "/home/newsite/public_html",
+        "db_name": "newsite_wp",
+        "db_user": "newsite_usr",
+        "db_pass": "PASSWORD",
+        "db_host": "localhost"
+    },
+    "migration": {
+        "old_domain": "oldsite.com",
+        "new_domain": "newsite.com"
+    }
+}
