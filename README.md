@@ -86,22 +86,83 @@ The assistant saves your answers in this file automatically. If it fails, just r
 
 ## 🇪🇸 Manual en Español
 
-### ¿Cómo usar este Migrador?
+Herramienta interactiva y fácil de usar para migrar sitios de WordPress entre dominios y hostings. Diseñada especialmente para manejar entornos restringidos y asegurar la integridad de la base de datos.
 
-Esta herramienta está diseñada para migrar sitios de WordPress de forma automática, incluso si tu hosting tiene restricciones de seguridad (como terminales bloqueadas).
+### 🚀 ¿Por qué esta herramienta?
 
-### Pasos para principiantes:
+La mayoría de los plugins de migración fallan en hostings compartidos con restricciones (como cPanel sin acceso shell completo). Este script usa una estrategia de varias capas para saltar esos bloqueos:
+1.  **Migración con Serialización**: Reemplaza URLs de forma segura sin romper datos serializados de PHP (ideal para Elementor y otros plugins complejos).
+2.  **Conexión Anti-Bloqueo**: Si la terminal SSH está bloqueada, el script activa automáticamente un túnel PHP y descarga los archivos vía SFTP recursivo.
+3.  **Soporte de Resumen**: Si se corta la conexión, el asistente recuerda por dónde iba.
+4.  **Configuración Automática**: Actualiza tu archivo `wp-config.php` de forma automática.
 
-1.  **Instala Python**: Asegúrate de tener Python 3 en tu computadora.
-2.  **Prepara tus llaves SSH**: Necesitas una llave privada para conectarte. Hay dos formas:
-    *   **Opción A (Tú la generas)**: Creas la llave en tu PC con `ssh-keygen` y subes la llave pública (`.pub`) al archivo `authorized_keys` del servidor.
-    *   **Opción B (El servidor la genera)**: Generas la llave en el cPanel, descargas la llave privada a tu PC y te aseguras de darle a "Autorizar" en el panel para que el servidor active la llave pública.
-3.  **Ejecuta el asistente**:
+### 🛠 Requisitos
+
+*   **Python 3.x** instalado en tu computadora local.
+*   **Acceso SSH/SFTP** tanto en el servidor de origen como en el de destino.
+
+### 📖 Cómo usar (Guía para Novatos)
+
+#### 1. Preparar tus Llaves SSH
+Para conectarte de forma segura, necesitas una llave SSH. Hay dos formas comunes de obtenerla:
+
+**Opción A: Tú generas la llave (Recomendado)**
+1.  **En tu computadora**, corre: `ssh-keygen -t rsa -b 4096 -f misitio.pem`
+2.  Abre el archivo `misitio.pem.pub` (la Llave Pública) y copia el texto.
+3.  **En tu servidor**, pega ese texto dentro del archivo `~/.ssh/authorized_keys`.
+
+**Opción B: El Servidor genera la llave (Común en cPanel)**
+1.  **En tu Panel de Hosting**, busca "Acceso SSH" y dale a "Generar nueva llave".
+2.  **Descarga la Llave Privada** a tu computadora (ej: como `llave.pem`).
+3.  **Muy Importante**: En tu panel de hosting, debes darle al botón "Administrar" o "Autorizar" para que el servidor active la llave pública dentro del archivo `authorized_keys`.
+
+#### 2. Instalación
+1.  Descarga o clona este repositorio.
+2.  Abre una terminal en la carpeta del proyecto.
+3.  Instala las librerías necesarias:
     ```bash
     pip install -r requirements.txt
-    python3 migrate_assistant.py
     ```
-4.  **Sigue las instrucciones**: El script te irá pidiendo los datos del sitio viejo y el nuevo.
+
+#### 3. Ejecutar el Asistente
+Simplemente corre:
+```bash
+python3 migrate_assistant.py
+```
+
+#### Opcional: Pre-configuración
+Si prefieres, puedes llenar tus datos antes de correr el script creando un archivo llamado `migration_config.json`. Puedes usar el ejemplo `migration_config.json.example` como plantilla:
+
+```json
+{
+    "source": {
+        "host": "oldsite.com",
+        "user": "oldsite",
+        "pass": null,
+        "key_file": "/home/miusuario/sitio_viejo.pem",
+        "key_pass": "PASSWORD",
+        "wp_path": "/home/oldsite/public_html",
+        "db_name": null
+    },
+    "target": {
+        "host": "newsite.com",
+        "user": "newsite",
+        "pass": null,
+        "key_file": "/home/miusuario/sitio_nuevo.pem",
+        "key_pass": "PASSWORD",
+        "wp_path": "/home/newsite/public_html",
+        "db_name": "newsite_wp",
+        "db_user": "newsite_usr",
+        "db_pass": "PASSWORD",
+        "db_host": "localhost"
+    },
+    "migration": {
+        "old_domain": "oldsite.com",
+        "new_domain": "newsite.com"
+    }
+}
+```
+El asistente guardará tus respuestas en este archivo automáticamente. Si algo falla, vuelve a correrlo y presiona **Enter** para reusar tus datos anteriores.
 
 ---
 
